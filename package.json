@@ -1,0 +1,19 @@
+{
+  "name": "julia-cad-viewer",
+  "main": "./lib/julia-cad-viewer",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationEvents": [
+    "julia-cad-viewer:show"
+  ],
+  "repository": "https://github.com/baconscript/julia-cad-viewer",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "baconjs": "^0.7.22",
+    "lodash": "^2.4.1",
+    "three": "^0.68.0"
+  }
+}

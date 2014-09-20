@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable julia-cad-viewer': 'julia-cad-viewer:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Julia CAD'
+      'submenu': [
+        { 'label': 'Show', 'command': 'julia-cad-viewer:show' }
+      ]
+    ]
+  }
+]
