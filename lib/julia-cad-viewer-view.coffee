@@ -1,4 +1,5 @@
 {View} = require 'atom'
+JuliaBridge = require 'julia-bridge'
 
 THREE = require '../vendor/three'
 require('../vendor/OrbitControls') THREE
@@ -46,11 +47,23 @@ class JuliaCadViewerView extends View
     @prepareScene @scene
     @enableControl(@camera)
 
+  updateGeom: ->
+    (data) =>
+      geom = new THREE.Geometry()
+      geom.vertices.push.apply geom.vertices, data.vertices.map (v) ->
+        new THREE.Vector3 v[0], v[1], v[2]
+      data.faces.forEach (f) ->
+        geom.faces.push new THREE.Face3 f
+      geom.computeBoundingSphere()
+      @scene.remove @cube
+      @scene.add geom
+      @cube = geom
+
   prepareScene: (scene) ->
     geometry = new THREE.BoxGeometry(30, 30, 30)
     material = new THREE.MeshLambertMaterial(color: 0x00ff00)
 
-    cube = new THREE.Mesh( geometry, material )
+    @cube = cube = new THREE.Mesh( geometry, material )
     scene.add cube
 
     light = new THREE.AmbientLight(0x404040)
@@ -63,6 +76,8 @@ class JuliaCadViewerView extends View
     directionalLight = new THREE.DirectionalLight(0xffffff, 0.1)
     directionalLight.position.set(-3, -1, -2)
     scene.add directionalLight
+
+    setTimeout (=> @updateGeom()({vertices:[[0,0,0],[1,0,0],[0,0,1]],faces:[0,1,2]}), 1000)
 
   onViewResize: () ->
     @renderer.setSize(window.innerWidth, window.innerHeight)

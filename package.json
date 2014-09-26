@@ -14,6 +14,6 @@
   "dependencies": {
     "baconjs": "^0.7.22",
     "lodash": "^2.4.1",
-    "julia-bridge": "~0.2.1"
+    "julia-bridge": "^0.2.1",
   }
 }
