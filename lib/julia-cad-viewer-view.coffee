@@ -56,12 +56,12 @@ class JuliaCadViewerView extends View
         geom.faces.push new THREE.Face3 f
       geom.computeBoundingSphere()
       @scene.remove @cube
-      @scene.add geom
-      @cube = geom
+      @cube = new THREE.Mesh geom, @material
+      @scene.add @cube
 
   prepareScene: (scene) ->
     geometry = new THREE.BoxGeometry(30, 30, 30)
-    material = new THREE.MeshLambertMaterial(color: 0x00ff00)
+    @material = material = new THREE.MeshLambertMaterial(color: 0x00ff00)
 
     @cube = cube = new THREE.Mesh( geometry, material )
     scene.add cube
@@ -77,7 +77,7 @@ class JuliaCadViewerView extends View
     directionalLight.position.set(-3, -1, -2)
     scene.add directionalLight
 
-    setTimeout (=> @updateGeom()({vertices:[[0,0,0],[1,0,0],[0,0,1]],faces:[0,1,2]}), 1000)
+    setTimeout (=> @updateGeom()({vertices:[[0,0,0],[1,0,0],[0,0,1]],faces:[0,1,2]})), 1000
 
   onViewResize: () ->
     @renderer.setSize(window.innerWidth, window.innerHeight)
