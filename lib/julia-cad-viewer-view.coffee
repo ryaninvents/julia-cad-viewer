@@ -53,8 +53,9 @@ class JuliaCadViewerView extends View
       geom.vertices.push.apply geom.vertices, data.vertices.map (v) ->
         new THREE.Vector3 v[0], v[1], v[2]
       data.faces.forEach (f) ->
-        geom.faces.push new THREE.Face3 f
+        geom.faces.push new THREE.Face3 f[0], f[1], f[2]
       geom.computeBoundingSphere()
+      geom.computeFaceNormals()
       @scene.remove @cube
       @cube = new THREE.Mesh geom, @material
       @scene.add @cube
@@ -77,7 +78,9 @@ class JuliaCadViewerView extends View
     directionalLight.position.set(-3, -1, -2)
     scene.add directionalLight
 
-    setTimeout (=> @updateGeom()({vertices:[[0,0,0],[1,0,0],[0,0,1]],faces:[0,1,2]})), 1000
+    setTimeout =>
+      @updateGeom()({vertices:[[0,0,0],[50,0,0],[0,0,50],[0,50,0]],faces:[[0,1,2],[1,3,2],[0,3,1],[0,2,3]]})
+    , 1000
 
   onViewResize: () ->
     @renderer.setSize(window.innerWidth, window.innerHeight)
