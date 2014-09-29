@@ -7,7 +7,7 @@ module.exports =
 class JuliaCadViewerView extends View
   @content: ->
     @div =>
-      @div class: "viewer", outlet: "threeContainer"
+      @div class: "viewer", outlet: "threeContainer", resize: "onViewResize"
 
   initialize: (serializeState) ->
     atom.workspaceView.command "julia-cad-viewer:show", => @toggle()
@@ -63,6 +63,9 @@ class JuliaCadViewerView extends View
     directionalLight = new THREE.DirectionalLight(0xffffff, 0.1)
     directionalLight.position.set(-3, -1, -2)
     scene.add directionalLight
+
+  onViewResize: () ->
+    @renderer.setSize(window.innerWidth, window.innerHeight)
 
   enableControl: (camera) ->
     @controls = new THREE.OrbitControls(camera)
