@@ -12,6 +12,9 @@ class JuliaCadViewerView extends View
 
   initialize: (serializeState) ->
     atom.workspaceView.command "julia-cad-viewer:show", => @toggle()
+    @bridge = new JuliaBridge
+      juliaPath: atom.config.get "julia-cad-viewer.juliaPath"
+    @bridge.ready.onValue -> console.log 'ready'
     @threeContainer.on 'contextmenu', -> false
     @threeInit()
     @animate()
@@ -79,9 +82,18 @@ class JuliaCadViewerView extends View
     directionalLight.position.set(-3, -1, -2)
     scene.add directionalLight
 
-    setTimeout =>
-      @updateGeom()({vertices:[[0,0,0],[50,0,0],[0,0,50],[0,50,0]],faces:[[0,1,2],[1,3,2],[0,3,1],[0,2,3]]})
-    , 1000
+    @bridge.stream('model').onValues (model) =>
+      console.log 'Got a model!', model
+      @updateGeom() model
+
+    setTimeout (=> @testJuliaGeom()), 1000
+
+  testJuliaGeom: ->
+    JULIA_CODE = """
+    @emit "model" ["vertices"=>[[0,0,0] [50,0,0] [0,0,50] [0,50,0]],"faces"=>[[0,1,2] [1,3,2] [0,3,1] [0,2,3]]]
+    """
+    @bridge.send JULIA_CODE
+
 
 
   onViewResize: () ->
