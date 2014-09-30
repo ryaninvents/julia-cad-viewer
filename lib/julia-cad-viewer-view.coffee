@@ -1,4 +1,4 @@
-{View} = require 'atom'
+{View, $} = require 'atom'
 JuliaBridge = require 'julia-bridge'
 
 THREE = require '../vendor/three'
@@ -12,6 +12,7 @@ class JuliaCadViewerView extends View
 
   initialize: (serializeState) ->
     atom.workspaceView.command "julia-cad-viewer:show", => @toggle()
+    @threeContainer.on 'contextmenu', -> false
     @threeInit()
     @animate()
 
