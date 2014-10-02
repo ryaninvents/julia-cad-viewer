@@ -3,6 +3,7 @@ JuliaBridge = require 'julia-bridge'
 
 THREE = require '../vendor/three'
 require('../vendor/OrbitControls') THREE
+hasGL = require '../vendor/hasGL'
 
 module.exports =
 class JuliaCadViewerView extends View
@@ -14,7 +15,6 @@ class JuliaCadViewerView extends View
     atom.workspaceView.command "julia-cad-viewer:show", => @toggle()
     @bridge = new JuliaBridge
       juliaPath: atom.config.get "julia-cad-viewer.juliaPath"
-    @bridge.ready.onValue -> console.log 'ready'
     @threeContainer.on 'contextmenu', -> false
     @threeInit()
     @animate()
@@ -43,7 +43,7 @@ class JuliaCadViewerView extends View
     @camera.position.z = 100
 
     @scene = new THREE.Scene()
-    @renderer = new THREE.CanvasRenderer()
+    @renderer = if hasGL() then new THREE.WebGLRenderer() else new THREE.CanvasRenderer()
     @renderer.setSize(window.innerWidth, window.innerHeight)
     @threeContainer.empty()
     @threeContainer.append(@renderer.domElement)
@@ -83,7 +83,6 @@ class JuliaCadViewerView extends View
     scene.add directionalLight
 
     @bridge.stream('model').onValues (model) =>
-      console.log 'Got a model!', model
       @updateGeom() model
 
   onViewResize: () ->
