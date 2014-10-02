@@ -43,7 +43,7 @@ class JuliaCadViewerView extends View
     @camera.position.z = 100
 
     @scene = new THREE.Scene()
-    @renderer = new THREE.WebGLRenderer()
+    @renderer = new THREE.CanvasRenderer()
     @renderer.setSize(window.innerWidth, window.innerHeight)
     @threeContainer.empty()
     @threeContainer.append(@renderer.domElement)
@@ -85,16 +85,6 @@ class JuliaCadViewerView extends View
     @bridge.stream('model').onValues (model) =>
       console.log 'Got a model!', model
       @updateGeom() model
-
-    setTimeout (=> @testJuliaGeom()), 1000
-
-  testJuliaGeom: ->
-    JULIA_CODE = """
-    @emit "model" ["vertices"=>[[0,0,0] [50,0,0] [0,0,50] [0,50,0]],"faces"=>[[0,1,2] [1,3,2] [0,3,1] [0,2,3]]]
-    """
-    @bridge.send JULIA_CODE
-
-
 
   onViewResize: () ->
     @renderer.setSize(window.innerWidth, window.innerHeight)

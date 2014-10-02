@@ -1,4 +1,4 @@
-JuliaCadView = require './julia-cad-viewer-view'
+JuliaCadViewerView = require './julia-cad-viewer-view'
 
 module.exports =
   juliaCadViewerView: null
@@ -6,12 +6,15 @@ module.exports =
     juliaPath: '/usr/bin/julia'
 
   activate: (state) ->
-    #@juliaCadViewerView = new JuliaCadViewerView(state.juliaCadViewerViewState)
-    atom.workspaceView.command 'julia-cad-viewer:show', ->
+    @juliaCadViewerView = new JuliaCadViewerView()
+    atom.workspaceView.command 'julia-cad-viewer:show', =>
+      program = atom.workspace.getActivePaneItem().getText()
+      console.log('PROGRAM!',program)
+      @juliaCadViewerView.bridge.send program
       atom.workspace.open 'cad-jl://test'
-    atom.workspace.registerOpener (uri) ->
+    atom.workspace.registerOpener (uri) =>
       return unless uri.match /^cad-jl:\/\/.*$/
-      new JuliaCadView()
+      @juliaCadViewerView
 
   deactivate: ->
     @juliaCadViewerView.destroy()
